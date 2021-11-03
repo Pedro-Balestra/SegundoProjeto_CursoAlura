@@ -3,9 +3,14 @@ import 'package:projeto2/database/app_database.dart';
 import 'package:projeto2/models/contact.dart';
 import 'package:projeto2/srceens/contact_from.dart';
 
-class ContactsList extends StatelessWidget {
+class ContactsList extends StatefulWidget {
   const ContactsList({Key? key}) : super(key: key);
 
+  @override
+  State<ContactsList> createState() => _ContactsListState();
+}
+
+class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,31 +56,23 @@ class ContactsList extends StatelessWidget {
               }
               break;
           }
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Text('Unknown error',
-                    style: TextStyle(color: Colors.red, fontSize: 24.0)),
-              ],
-            ),
-          );
+          return const Text('Unknown error');
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
               .push(
-                MaterialPageRoute(
-                  builder: (context) => const ContactForm(),
-                ),
-              )
-              .then(
-                (newContact) => debugPrint(newContact.toString()),
-              );
+                  MaterialPageRoute(builder: (context) => const ContactForm()))
+              .then((value) {
+            setState(() {
+              widget.createState();
+            });
+          });
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+        ),
       ),
     );
   }
