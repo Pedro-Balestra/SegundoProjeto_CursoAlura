@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto2/database/app_database.dart';
+import 'package:projeto2/database/dao/contact_dao.dart';
 import 'package:projeto2/models/contact.dart';
 import 'package:projeto2/srceens/contact_from.dart';
 
@@ -11,6 +11,8 @@ class ContactsList extends StatefulWidget {
 }
 
 class _ContactsListState extends State<ContactsList> {
+  final ContactDao _dao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +22,7 @@ class _ContactsListState extends State<ContactsList> {
       // inserido generics no FutureBuilder
       body: FutureBuilder<List<Contact>>(
         initialData: const [],
-        future: findAll(),
+        future: _dao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -56,19 +58,29 @@ class _ContactsListState extends State<ContactsList> {
               }
               break;
           }
-          return const Text('Unknown error');
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Text('Unknown error',
+                    style: TextStyle(color: Colors.red, fontSize: 24.0)),
+              ],
+            ),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
               .push(
-                  MaterialPageRoute(builder: (context) => const ContactForm()))
-              .then((value) {
-            setState(() {
-              widget.createState();
-            });
-          });
+                MaterialPageRoute(
+                  builder: (context) => const ContactForm(),
+                ),
+              )
+              .then(
+                (value) => setState(() {}),
+              );
         },
         child: const Icon(
           Icons.add,
